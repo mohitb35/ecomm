@@ -1,0 +1,25 @@
+{
+  "name": "ecomm",
+  "version": "1.0.0",
+  "description": "ecommerce app",
+  "main": "index.js",
+  "scripts": {
+	"dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mohitb35/ecomm.git"
+  },
+  "author": "Mohit Bajaj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/mohitb35/ecomm/issues"
+  },
+  "homepage": "https://github.com/mohitb35/ecomm#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.2"
+  }
+}
