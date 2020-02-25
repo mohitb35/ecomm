@@ -105,37 +105,37 @@ class UsersRepository {
 				return record;
 			}
 		}
-
-		return 'Record not found';
 	}
 }
 
 
-const test = async () => {
-	const repo = new UsersRepository('users.json');
+// const test = async () => {
+// 	const repo = new UsersRepository('users.json');
 
-/* 	await repo.create({
-		email: 'mohit@test.com',
-		password: 'qwerty'
-	})
+// /* 	await repo.create({
+// 		email: 'mohit@test.com',
+// 		password: 'qwerty'
+// 	})
 
-	const users = await repo.getAll();
-	console.log("Users:", users);
+// 	const users = await repo.getAll();
+// 	console.log("Users:", users);
 
-	const user = await repo.getOne('jnkjn');
-	console.log("Fetched user:", user); */
+// 	const user = await repo.getOne('jnkjn');
+// 	console.log("Fetched user:", user); */
 
-	/* await repo.update('de1c946731dd29541153cd4f8044a19', {
-		password: '123456',
-		age: '25'
-	}); */
+// 	/* await repo.update('de1c946731dd29541153cd4f8044a19', {
+// 		password: '123456',
+// 		age: '25'
+// 	}); */
 
-	const user = await repo.getOneBy({
-		/* email: 'mohit@test2.com', */
-		gendaar: 'g'
-	})
+// 	const user = await repo.getOneBy({
+// 		/* email: 'mohit@test2.com', */
+// 		gendaar: 'g'
+// 	})
 
-	console.log(user);
-}
+// 	console.log(user);
+// }
 
-test();
+// test();
+
+module.exports = new UsersRepository('users.json');
