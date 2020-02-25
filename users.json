@@ -1,0 +1,21 @@
+[
+  {
+    "email": "mohit@test1.com",
+    "password": "qwerty",
+	"id": "aa0f439e6770843e5d6a035b43e07d60", 
+	"gender": "m"
+  },
+  {
+    "email": "mohit@test2.com",
+    "password": "qwerty",
+    "id": "e9d443ee990784a2e3b025eacb45a191", 
+	"gender": "f"
+  },
+  {
+    "email": "mohit@test3.com",
+    "password": "123456",
+    "id": "de1c946731dd29541153cd4f80b44a19",
+	"age": "25",
+	"gender": "m"
+  }
+]
