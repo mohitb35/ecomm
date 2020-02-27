@@ -1,5 +1,7 @@
 const fs = require('fs');
 const crypto = require('crypto');
+const util = require('util');
+const scrypt = util.promisify(crypto.scrypt);
 
 class UsersRepository {
 	constructor(filename) {
@@ -34,21 +36,47 @@ class UsersRepository {
 		return data; */
 
 		// Opens repo, reads contents, parses JSON format to object, and returns data
-		return JSON.parse(await fs.promises.readFile(this.filename, {
-			encoding: 'utf8'
-		}));
-	}
+		return JSON.parse(
+			await fs.promises.readFile(this.filename, {
+				encoding: 'utf8'
+			})
+		);
+	};
 
 	async create(attributes) {
 
 		attributes.id = this.randomId();
 
+		// create salt
+		const salt = crypto.randomBytes(16).toString('hex');
+
+		// create hash
+		const hashed = await scrypt(attributes.password, salt, 64);
+		// attributes.hash = hashed.toString('hex') + '.' + salt;
+
+		// 
+		const record = {
+			...attributes,
+			password: hashed.toString('hex') + '.' + salt
+		}
+
 		// First get the file details, then append the new attributes to the file (as a new user)
 		const records = await this.getAll();
-		records.push(attributes);
+		records.push(record);
 
 		// Write the updated records back to the file 
 		await this.writeAll(records);
+
+		return record;
+	}
+
+	async comparePassword(saved, supplied) {
+		// saved password includes salt
+		const [ hash, salt ] = saved.split('.');
+
+		const hashedSupplied = await scrypt(supplied, salt, 64); //buffer objecte
+
+		return (hashedSupplied.toString('hex') === hash)
 	}
 
 	async writeAll(records) {
