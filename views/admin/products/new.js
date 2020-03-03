@@ -17,7 +17,7 @@ module.exports = ({ errors }) => {
 						</div>
 						<div class="field">
 							<label class="label">Price</label>
-							<input required class="input" placeholder="Price" name="price" type="text" />
+							<input required class="input" placeholder="Price" name="price" type="number" />
 							<p class="help is-danger">${getError(errors, 'price')}</p>
 						</div>
 						<input type="file" name="image" id="">
