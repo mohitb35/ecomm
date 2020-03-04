@@ -1,5 +1,5 @@
 const express = require('express');
-const { check, validationResult } = require('express-validator');
+const multer = require('multer');
 
 const productsRepo = require('../../repositories/products');
 const createProductTemplate = require('../../views/admin/products/new');
@@ -8,8 +8,10 @@ const {
 	requireTitle, 
 	requirePrice 
 } = require('./validators');
+const { handleErrors } = require('./middlewares');
 
 const router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
 /* Routes */
 // Admin product listy
@@ -23,14 +25,15 @@ router.get('/admin/products/new', (req, res) => {
 });
 
 router.post('/admin/products/new', 
-	[requireTitle, requirePrice],
-	(req, res) => {
-		const errors = validationResult(req);
+	upload.single('image'),
+	// Need this after the middleware above (otherwise req.body does not exist, as bodyParser does not parse multipart form data)
+	[requireTitle, requirePrice], 
+	handleErrors(createProductTemplate),
+	async (req, res) => {
+		const image =  req.file.buffer.toString('base64');
+		const { title, price } = req.body;
 
-		if(!errors.isEmpty()){
-			res.send(createProductTemplate({ errors }));
-			return;
-		}
+		await productsRepo.create({	title, price, image });
 
 		res.send('submitted');
 	}

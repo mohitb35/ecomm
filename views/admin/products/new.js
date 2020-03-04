@@ -5,11 +5,10 @@ const { getError } = require('../../helpers');
 module.exports = ({ errors }) => {
 	return layout({ 
 		content: `
-		<div class="container">
 			<div class="columns is-centered">
-				<div class="column is-one-quarter">
-					<form method="POST">
-						<h1 class="title">Add Product</h1>
+				<div class="column is-half">
+					<h1 class="subtitle">Create a Product</h1>
+					<form method="POST" enctype="multipart/form-data">
 						<div class="field">
 							<label class="label">Title</label>
 							<input required class="input" placeholder="Title" name="title" type="text"/>
@@ -20,12 +19,15 @@ module.exports = ({ errors }) => {
 							<input required class="input" placeholder="Price" name="price" type="number" />
 							<p class="help is-danger">${getError(errors, 'price')}</p>
 						</div>
-						<input type="file" name="image" id="">
+						<div class="field">
+							<label class="label">Image</label>            
+							<input type="file" name="image" />
+						</div>
+            			<br />
 						<button class="button is-primary">Create Product</button>
 					</form>
 				</div>
 			</div>
-		</div>
 		` 
 	});
 };
