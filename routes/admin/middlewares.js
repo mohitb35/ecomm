@@ -3,14 +3,20 @@ const { validationResult } = require('express-validator');
 
 // To create middleware, need to return a function
 module.exports = {
-	handleErrors (templateFunction) {
+	handleErrors (templateFunction, dataCb = null) {
 
-		return (req, res, next) => {
+		return async (req, res, next) => {
 			const errors = validationResult(req); 
 			//processes the errors and returns a Result Object
-			
+
 			if(!errors.isEmpty()) {
-				res.send(templateFunction({ errors }));
+
+				let data = {};
+				if (dataCb) {
+					data = await dataCb(req);
+				}
+
+				res.send(templateFunction({ errors, ...data }));
 				return;
 			}
 		
