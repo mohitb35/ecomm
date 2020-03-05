@@ -16,5 +16,13 @@ module.exports = {
 		
 			next();
 		}
+	},
+	requireAuth(req, res, next) {
+		if(!req.session.userId) {
+			res.redirect('/signin');
+			return;
+		}
+		
+		next();
 	}
 }

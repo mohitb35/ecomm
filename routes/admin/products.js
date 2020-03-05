@@ -9,26 +9,32 @@ const {
 	requireTitle, 
 	requirePrice 
 } = require('./validators');
-const { handleErrors } = require('./middlewares');
+const { handleErrors,requireAuth } = require('./middlewares');
 
 const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 /* Routes */
 // Admin product list route
-router.get('/admin/products', async (req, res) => {
-	// Get products JSON array from products.json
-	const products = await productsRepo.getAll();
-
-	res.send(productsIndexTemplate({ products }));
-});
+router.get('/admin/products', 
+	requireAuth,
+	async (req, res) => {
+		// Get products JSON array from products.json
+		const products = await productsRepo.getAll();
+		res.send(productsIndexTemplate({ products }));
+	}
+);
 
 // Add product form
-router.get('/admin/products/new', (req, res) => {
-	res.send(createProductTemplate({}));
-});
+router.get('/admin/products/new', 
+	requireAuth,
+	(req, res) => {
+		res.send(createProductTemplate({}));
+	}
+);
 
-router.post('/admin/products/new', 
+router.post('/admin/products/new',
+	requireAuth,
 	upload.single('image'),
 	// Need this after the middleware above (otherwise req.body does not exist, as bodyParser does not parse multipart form data)
 	[requireTitle, requirePrice], 
@@ -41,6 +47,6 @@ router.post('/admin/products/new',
 
 		res.redirect('/admin/products');
 	}
-)
+);
 
 module.exports = router;
