@@ -3,6 +3,7 @@ const multer = require('multer');
 
 const productsRepo = require('../../repositories/products');
 const createProductTemplate = require('../../views/admin/products/new');
+const productsIndexTemplate = require('../../views/admin/products/index');
 
 const { 
 	requireTitle, 
@@ -14,9 +15,12 @@ const router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 /* Routes */
-// Admin product listy
-router.get('/admin/products', (req, res) => {
-	res.send('1');
+// Admin product list route
+router.get('/admin/products', async (req, res) => {
+	// Get products JSON array from products.json
+	const products = await productsRepo.getAll();
+
+	res.send(productsIndexTemplate({ products }));
 });
 
 // Add product form
@@ -35,7 +39,7 @@ router.post('/admin/products/new',
 
 		await productsRepo.create({	title, price, image });
 
-		res.send('submitted');
+		res.redirect('/admin/products');
 	}
 )
 
