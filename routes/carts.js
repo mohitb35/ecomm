@@ -2,7 +2,7 @@ const express = require('express');
 
 const cartsRepo = require('../repositories/carts');
 const productsRepo = require('../repositories/products');
-// const productListTemplate = require('../views/products/index');
+const cartShowTemplate = require('../views/carts/show');
 
 const router = express.Router();
 
@@ -12,9 +12,7 @@ router.post('/cart/products', async (req, res) => {
 	const { productId } = req.body;
 
 	// In case product does not exist, return with an error
-	const product = await productsRepo.getOneBy({
-		id: productId
-	});
+	const product = await productsRepo.getOne(productId);
 
 	if (!product) {
 		res.send('Product not found');
@@ -35,9 +33,7 @@ router.post('/cart/products', async (req, res) => {
 	} else {
 		// fetch cart from repo
 		try {
-			cart = await cartsRepo.getOneBy({
-				id: cartId
-			});
+			cart = await cartsRepo.getOne(cartId);
 		} catch (err) {
 			res.send('Could not fetch cart info');
 			return;
@@ -63,12 +59,37 @@ router.post('/cart/products', async (req, res) => {
 		res.send('could not add item');
 	};
 	
-	res.send(cart);
+	res.redirect('/cart');
 
 });
 
 // Show all items in cart route
 router.get('/cart', async (req, res) => {
+	const { cartId } = req.session;
+
+	let cart;
+
+	// If no cart exists, redirect to product list page
+	if (!cartId) {
+		res.redirect('/');
+		return;
+	} else {
+		// fetch cart from repo
+		try {
+			cart = await cartsRepo.getOne(cartId);
+		} catch (err) {
+			res.send('Could not fetch cart info');
+			return;
+		}
+	}
+	
+	for (let item of cart.items){
+		const product = await productsRepo.getOne(item.id);
+		item.product = product;
+	}
+
+	res.send(cartShowTemplate({ cart }));
+
 });
 
 // remove item from cart route
