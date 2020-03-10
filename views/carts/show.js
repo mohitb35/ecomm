@@ -10,7 +10,6 @@ function getTotal({ items }) {
 
 
 module.exports = ({ cart }) => {
-	console.log(cart);
 	const renderedCart = cart.items.map((item) => {
 		return `
 			<div class="cart-item message">
@@ -23,7 +22,8 @@ module.exports = ({ cart }) => {
 					$${item.product.price * item.quantity}
 				</div>
 				<div class="remove">
-				<form method="POST">
+				<form method="POST" action="/cart/products/delete">
+					<input hidden value="${item.id}" name="itemId" />
 					<button class="button is-danger">                  
 					<span class="icon is-small">
 						<i class="fas fa-times"></i>

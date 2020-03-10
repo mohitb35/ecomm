@@ -82,7 +82,7 @@ router.get('/cart', async (req, res) => {
 			return;
 		}
 	}
-	
+
 	for (let item of cart.items){
 		const product = await productsRepo.getOne(item.id);
 		item.product = product;
@@ -93,7 +93,23 @@ router.get('/cart', async (req, res) => {
 });
 
 // remove item from cart route
-router.post('/cart', async (req, res) => {
+router.post('/cart/products/delete', async (req, res) => {
+	const { itemId } = req.body;
+	const { cartId } = req.session;	
+
+	// delete item from cart and update it
+	try {
+		const cart = await cartsRepo.getOne(cartId);
+
+		const items = cart.items.filter(item => item.id !== itemId);
+
+		await cartsRepo.update(cartId, { items });
+	} catch (err) {
+		res.send('Error while deleting item:' + err);
+		return;
+	}
+
+	res.redirect('/cart');
 });
 
 module.exports = router;
